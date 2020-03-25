@@ -29,6 +29,10 @@ import Login from "views/examples/Login.js";
 import Profile from "views/examples/Profile.js";
 import Register from "views/examples/Register.js";
 
+import Indonesia from "views/pages/Indonesia.js";
+
+
+
 ReactDOM.render(
   <BrowserRouter>
     <Switch>
@@ -48,6 +52,11 @@ ReactDOM.render(
         path="/register-page"
         exact
         render={props => <Register {...props} />}
+      />
+      <Route
+        path="/Indonesia"
+        exact
+        render={props => <Indonesia {...props} />}
       />
       <Redirect to="/" />
     </Switch>
