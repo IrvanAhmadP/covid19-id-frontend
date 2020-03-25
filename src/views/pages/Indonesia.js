@@ -8,12 +8,41 @@ import NavbarDefault from "components/Navbars/NavbarDefault.js";
 import FooterDefault from "components/Footers/FooterDefault.js";
 
 class Profile extends React.Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      error: null,
+      isLoaded: false,
+      dataStatus: [],
+      dataList: []
+    } 
+  }
+  getDataStatus(){
+    fetch("https://api.kawalcorona.com/indonesia/")
+      .then(res => res.json())
+      .then(
+        (result) => {
+          this.setState({
+            isLoaded: true,
+            dataStatus: result[0]
+          });
+        },
+        (error) => {
+          this.setState({
+            isLoaded: true,
+            error
+          });
+        }
+      )
+  }
   componentDidMount() {
     document.documentElement.scrollTop = 0;
     document.scrollingElement.scrollTop = 0;
     this.refs.main.scrollTop = 0;
+    this.getDataStatus();
   }
   render() {
+    const { dataStatus } = this.state;
     return (
       <>
         <NavbarDefault />
@@ -66,40 +95,30 @@ class Profile extends React.Component {
                       className="order-lg-3 text-lg-right align-self-lg-center"
                       lg="4"
                     >
-                      <div className="card-profile-actions py-4 mt-lg-0">
-                        <Button
-                          className="mr-4"
-                          color="info"
-                          href="#pablo"
-                          onClick={e => e.preventDefault()}
-                          size="sm"
-                        >
-                          Connect
-                        </Button>
-                        <Button
-                          className="float-right"
-                          color="default"
-                          href="#pablo"
-                          onClick={e => e.preventDefault()}
-                          size="sm"
-                        >
-                          Message
-                        </Button>
+                      <div className="card-profile-stats d-flex justify-content-center">
+                        <div>
+                          <span className="heading">{ ((dataStatus.sembuh / dataStatus.positif) * 100).toFixed(2) }%</span>
+                          <span className="description">Sembuh</span>
+                        </div>
+                        <div>
+                          <span className="heading">{ ((dataStatus.meninggal / dataStatus.positif) * 100).toFixed(2) }%</span>
+                          <span className="description">Meninggal</span>
+                        </div>
                       </div>
                     </Col>
                     <Col className="order-lg-1" lg="4">
                       <div className="card-profile-stats d-flex justify-content-center">
                         <div>
-                          <span className="heading">22</span>
-                          <span className="description">Friends</span>
+                          <span className="heading">{ dataStatus.positif }</span>
+                          <span className="description">Positif</span>
                         </div>
                         <div>
-                          <span className="heading">10</span>
-                          <span className="description">Photos</span>
+                          <span className="heading">{ dataStatus.sembuh }</span>
+                          <span className="description">Sembuh</span>
                         </div>
                         <div>
-                          <span className="heading">89</span>
-                          <span className="description">Comments</span>
+                          <span className="heading">{ dataStatus.meninggal }</span>
+                          <span className="description">Meninggal</span>
                         </div>
                       </div>
                     </Col>

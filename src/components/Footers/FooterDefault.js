@@ -1,14 +1,12 @@
 import React from "react";
 // reactstrap components
 import {
-  Button,
   NavItem,
   NavLink,
   Nav,
   Container,
   Row,
-  Col,
-  UncontrolledTooltip
+  Col
 } from "reactstrap";
 
 class FooterDefault extends React.Component {
