@@ -1,0 +1,26 @@
+{
+  "files": {
+    "main.css": "/static/css/main.03979311.chunk.css",
+    "main.js": "/static/js/main.e1603cb9.chunk.js",
+    "main.js.map": "/static/js/main.e1603cb9.chunk.js.map",
+    "runtime-main.js": "/static/js/runtime-main.d9fcf46e.js",
+    "runtime-main.js.map": "/static/js/runtime-main.d9fcf46e.js.map",
+    "static/js/2.7125a605.chunk.js": "/static/js/2.7125a605.chunk.js",
+    "static/js/2.7125a605.chunk.js.map": "/static/js/2.7125a605.chunk.js.map",
+    "index.html": "/index.html",
+    "precache-manifest.cce93c0aa83fe4a2177f98b295a9cd39.js": "/precache-manifest.cce93c0aa83fe4a2177f98b295a9cd39.js",
+    "service-worker.js": "/service-worker.js",
+    "static/css/main.03979311.chunk.css.map": "/static/css/main.03979311.chunk.css.map",
+    "static/js/2.7125a605.chunk.js.LICENSE.txt": "/static/js/2.7125a605.chunk.js.LICENSE.txt",
+    "static/js/main.e1603cb9.chunk.js.LICENSE.txt": "/static/js/main.e1603cb9.chunk.js.LICENSE.txt",
+    "static/media/covid19.jpeg": "/static/media/covid19.4f1dd34f.jpeg",
+    "static/media/font-awesome.min.css": "/static/media/fontawesome-webfont.fee66e71.woff",
+    "static/media/nucleo.css": "/static/media/nucleo-icons.f82ec6ba.ttf"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.d9fcf46e.js",
+    "static/js/2.7125a605.chunk.js",
+    "static/css/main.03979311.chunk.css",
+    "static/js/main.e1603cb9.chunk.js"
+  ]
+}
