@@ -23,6 +23,7 @@ class FooterDefault extends React.Component {
                   <a
                     href="https://www.creative-tim.com?ref=adsr-footer"
                     target="_blank"
+                    rel="noopener noreferrer"
                   >
                     Creative Tim
                   </a>

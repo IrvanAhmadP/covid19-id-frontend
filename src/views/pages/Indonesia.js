@@ -1,51 +1,163 @@
 import React from "react";
-
+import classnames from "classnames";
 // reactstrap components
-import { Button, Card, Container, Row, Col } from "reactstrap";
+import {
+  Button,
+  Card,
+  Container,
+  Row,
+  Col,
+  NavItem,
+  NavLink,
+  Nav,
+  TabContent,
+  TabPane,
+  FormGroup,
+  Label,
+  Input } from "reactstrap";
 
 // core components
-import NavbarDefault from "components/Navbars/NavbarDefault.js";
+// import NavbarDefault from "components/Navbars/NavbarDefault.js";
+import SimpleTable from "components/Table/SimpleTable.js";
 import FooterDefault from "components/Footers/FooterDefault.js";
+import SpinnerDefault from "components/Spinner/SpinnerDefault";
 
 class Profile extends React.Component {
   constructor(props){
     super(props);
+    this.urlDataStatus= 'https://api.kawalcorona.com/indonesia/'
+    this.urlDataProvinsi = 'https://api.kawalcorona.com/indonesia/provinsi/'
+    this.urlListProvinsi = 'https://covid19-api-id.herokuapp.com/provinsi/'
+
+    this.provinsiMultiParam = {
+      status: true,
+      'param': "attributes"
+    }
+    this.dataProvinsiHeader= ['Provinsi', 'Positif', 'Sembuh', 'Meninggal'];
+    this.dataProvinsiParam= ['Provinsi', 'Kasus_Posi', 'Kasus_Semb', 'Kasus_Meni'];
+
+    this.kabupatenMultiParam = {
+      'status': false
+    }
+    this.dataKabupatenHeader= ['Kota/Kabupaten', 'ODP', 'PDP', 'Positif'];
+    this.dataKabupatenParam= ['kabupaten', 'ODP', 'PDP', 'positif'];
+    
     this.state = {
       error: null,
-      isLoaded: false,
+      plainTabs: 1,
+      loadingProvinsi: false,
+      loadingKabupaten: false,
       dataStatus: [],
-      dataList: []
+      dataProvinsi: [],
+      dataKabupaten: [],
+      listProvinsi: []
     } 
   }
+  toggleNavs = (e, state, index) => {
+    e.preventDefault();
+    this.setState({
+      [state]: index
+    });
+  };
+  removeComma(value){
+    if(typeof value == 'undefined'){
+      return 0
+    }
+    return value.replace(',', '')
+  }
   getDataStatus(){
-    fetch("https://api.kawalcorona.com/indonesia/")
+    fetch(this.urlDataStatus)
       .then(res => res.json())
       .then(
         (result) => {
           this.setState({
-            isLoaded: true,
             dataStatus: result[0]
           });
         },
         (error) => {
           this.setState({
-            isLoaded: true,
             error
           });
         }
       )
+  }
+  getDataProvinsi(){
+    this.setState({
+      loadingProvinsi: true
+    })
+    fetch(this.urlDataProvinsi)
+      .then(res => res.json())
+      .then(
+        (result) => {
+          this.setState({
+            dataProvinsi: result,
+            loadingProvinsi: false
+          });
+        },
+        (error) => {
+          this.setState({
+            loadingProvinsi: false,
+            error
+          });
+        }
+      )
+  }
+  getListProvinsi(){
+    fetch(this.urlListProvinsi)
+      .then(res => res.json())
+      .then(
+        (result) => {
+          this.setState({
+            listProvinsi: result.data
+          });
+        },
+        (error) => {
+          this.setState({
+            error
+          });
+        }
+      )
+  }
+  getDataKabupaten(urlDataKabupaten){
+    this.setState({
+      loadingKabupaten: true
+    })
+    fetch(urlDataKabupaten)
+      .then(res => res.json())
+      .then(
+        (result) => {
+          this.setState({
+            dataKabupaten: result.data,
+            loadingKabupaten: false,
+          });
+        },
+        (error) => {
+          this.setState({
+            dataKabupaten: [],
+            loadingKabupaten: false,
+            error
+          });
+        }
+      )
+  }
+  changeProvinsiSelect(e){
+    let urlDataKabupaten = e.target.value;
+    this.getDataKabupaten(urlDataKabupaten);    
   }
   componentDidMount() {
     document.documentElement.scrollTop = 0;
     document.scrollingElement.scrollTop = 0;
     this.refs.main.scrollTop = 0;
     this.getDataStatus();
+    this.getDataProvinsi();
+    this.getListProvinsi();
   }
   render() {
-    const { dataStatus } = this.state;
+    const { dataStatus, dataProvinsi, listProvinsi, dataKabupaten } = this.state;
+    const {loadingProvinsi} = this.state;
     return (
       <>
-        <NavbarDefault />
+        {/* <NavbarDefault /> */}
         <main className="profile-page" ref="main">
           <section className="section-profile-cover section-shaped my-0">
             {/* Circles background */}
@@ -66,8 +178,7 @@ class Profile extends React.Component {
                 version="1.1"
                 viewBox="0 0 2560 100"
                 x="0"
-                y="0"
-              >
+                y="0">
                 <polygon
                   className="fill-white"
                   points="2560 0 2560 100 0 100"
@@ -86,24 +197,31 @@ class Profile extends React.Component {
                           <img
                             alt="..."
                             className="rounded-circle"
-                            src={require("assets/img/theme/team-4-800x800.jpg")}
+                            src={require("assets/custom/img/covid19.jpeg")}
                           />
                         </a>
                       </div>
                     </Col>
                     <Col
                       className="order-lg-3 text-lg-right align-self-lg-center"
-                      lg="4"
-                    >
-                      <div className="card-profile-stats d-flex justify-content-center">
-                        <div>
-                          <span className="heading">{ ((dataStatus.sembuh / dataStatus.positif) * 100).toFixed(2) }%</span>
-                          <span className="description">Sembuh</span>
-                        </div>
-                        <div>
-                          <span className="heading">{ ((dataStatus.meninggal / dataStatus.positif) * 100).toFixed(2) }%</span>
-                          <span className="description">Meninggal</span>
-                        </div>
+                      lg="4">
+                      <div className="card-profile-actions py-4 mt-lg-0">
+                        <Button
+                          className="mr-4"
+                          color="success"
+                          onClick={e => e.preventDefault()}
+                          size="sm">
+                          { ((this.removeComma(dataStatus.sembuh) / this.removeComma(dataStatus.positif)) * 100).toFixed(2) }% 
+                          <br/>Sembuh
+                        </Button>
+                        <Button
+                          className="float-right"
+                          color="danger"
+                          onClick={e => e.preventDefault()}
+                          size="sm">
+                          { ((this.removeComma(dataStatus.meninggal) / this.removeComma(dataStatus.positif)) * 100).toFixed(2) }% 
+                          <br/>Meninggal
+                        </Button>
                       </div>
                     </Col>
                     <Col className="order-lg-1" lg="4">
@@ -123,39 +241,79 @@ class Profile extends React.Component {
                       </div>
                     </Col>
                   </Row>
-                  <div className="text-center mt-5">
-                    <h3>
-                      Jessica Jones{" "}
-                      <span className="font-weight-light">, 27</span>
-                    </h3>
-                    <div className="h6 font-weight-300">
-                      <i className="ni location_pin mr-2" />
-                      Bucharest, Romania
-                    </div>
-                    <div className="h6 mt-4">
-                      <i className="ni business_briefcase-24 mr-2" />
-                      Solution Manager - Creative Tim Officer
-                    </div>
-                    <div>
-                      <i className="ni education_hat mr-2" />
-                      University of Computer Science
-                    </div>
+                  <div className="mt-5">
+                    <div className="nav-wrapper">
+                      <Nav
+                        className="nav-fill flex-column flex-md-row"
+                        id="tabs-icons-text"
+                        pills
+                        role="tablist">
+                        <NavItem>
+                          <NavLink
+                            aria-selected={this.state.plainTabs === 1}
+                            className={classnames("mb-sm-3 mb-md-0", {
+                              active: this.state.plainTabs === 1
+                            })}
+                            onClick={e => this.toggleNavs(e, "plainTabs", 1)}
+                            href="#provinsi"
+                            role="tab">
+                            Provinsi
+                          </NavLink>
+                        </NavItem>
+                        <NavItem>
+                          <NavLink
+                            aria-selected={this.state.plainTabs === 2}
+                            className={classnames("mb-sm-3 mb-md-0", {
+                              active: this.state.plainTabs === 2
+                            })}
+                            onClick={e => this.toggleNavs(e, "plainTabs", 2)}
+                            href="#kota"
+                            role="tab">
+                            Kota/Kabupaten
+                          </NavLink>
+                        </NavItem>
+                      </Nav>
                   </div>
-                  <div className="mt-5 py-5 border-top text-center">
-                    <Row className="justify-content-center">
-                      <Col lg="9">
-                        <p>
-                          An artist of considerable range, Ryan — the name taken
-                          by Melbourne-raised, Brooklyn-based Nick Murphy —
-                          writes, performs and records all of his own music,
-                          giving it a warm, intimate feel with a solid groove
-                          structure. An artist of considerable range.
-                        </p>
-                        <a href="#pablo" onClick={e => e.preventDefault()}>
-                          Show more
-                        </a>
-                      </Col>
-                    </Row>
+                  <TabContent activeTab={"plainTabs" + this.state.plainTabs}>
+                    <TabPane tabId="plainTabs1">
+                      { (loadingProvinsi)
+                          ? <SpinnerDefault/>
+                          : <SimpleTable 
+                              multiParam={this.provinsiMultiParam}
+                              dataHeader={this.dataProvinsiHeader}
+                              dataParam={this.dataProvinsiParam}
+                              data={dataProvinsi}/>
+                      }
+                      
+                    </TabPane>
+                    <TabPane tabId="plainTabs2">
+                      <FormGroup>
+                        <Label className="font-weight-bold">Provinsi</Label>
+                        <Input type="select" name="provinsi" defaultValue="" onChange={(e) => this.changeProvinsiSelect(e)}>
+                            <option value="" disabled>Pilih Provinsi</option>
+                            {
+                              listProvinsi.map((provinsi, i) => {
+                                return (
+                                  <option key={i} value={provinsi.url}>
+                                    {provinsi.namaProvinsi}
+                                  </option>
+                                )
+                              })
+                            }
+                        </Input>
+                      </FormGroup>
+                      { (this.state.loadingKabupaten)
+                          ? <div className="text-center">
+                              <SpinnerDefault/>
+                            </div>
+                          : <SimpleTable 
+                              multiParam={this.kabupatenMultiParam}
+                              dataHeader={this.dataKabupatenHeader}
+                              dataParam={this.dataKabupatenParam}
+                              data={dataKabupaten}/>
+                      }
+                    </TabPane>
+                  </TabContent>
                   </div>
                 </div>
               </Card>

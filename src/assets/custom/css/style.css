@@ -1,0 +1,15 @@
+.section-profile-cover {
+  height: 425px;
+}
+@media (max-width: 991.98px) {
+  .section-profile-cover {
+    height: 175px; } }
+.section-shaped .shape-style-1.shape-default{
+  background: green;
+}
+.nav-pills .nav-link.active, .nav-pills .show > .nav-link{
+  background: #2dce89;
+}
+.spinner-primary-wrap{
+  margin-bottom: 15px;
+}
