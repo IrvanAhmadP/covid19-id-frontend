@@ -9,7 +9,7 @@ function SimpleTable(props){
         <thead className="text-center ">
           <tr>
             <td>#</td>
-            { 
+            {
               dataHeader.map((header, i) => {
                 return <td key={i}>{header}</td>
               })

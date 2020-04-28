@@ -41,7 +41,7 @@ class Profile extends React.Component {
     }
     this.dataKabupatenHeader= ['Kota/Kabupaten', 'ODP', 'PDP', 'Positif'];
     this.dataKabupatenParam= ['kabupaten', 'ODP', 'PDP', 'positif'];
-    
+
     this.state = {
       error: null,
       plainTabs: 1,
@@ -51,7 +51,7 @@ class Profile extends React.Component {
       dataProvinsi: [],
       dataKabupaten: [],
       listProvinsi: []
-    } 
+    }
   }
   toggleNavs = (e, state, index) => {
     e.preventDefault();
@@ -142,7 +142,7 @@ class Profile extends React.Component {
   }
   changeProvinsiSelect(e){
     let urlDataKabupaten = e.target.value;
-    this.getDataKabupaten(urlDataKabupaten);    
+    this.getDataKabupaten(urlDataKabupaten);
   }
   componentDidMount() {
     document.documentElement.scrollTop = 0;
@@ -211,7 +211,7 @@ class Profile extends React.Component {
                           color="success"
                           onClick={e => e.preventDefault()}
                           size="sm">
-                          { ((this.removeComma(dataStatus.sembuh) / this.removeComma(dataStatus.positif)) * 100).toFixed(2) }% 
+                          { ((this.removeComma(dataStatus.sembuh) / this.removeComma(dataStatus.positif)) * 100).toFixed(2) }%
                           <br/>Sembuh
                         </Button>
                         <Button
@@ -219,7 +219,7 @@ class Profile extends React.Component {
                           color="danger"
                           onClick={e => e.preventDefault()}
                           size="sm">
-                          { ((this.removeComma(dataStatus.meninggal) / this.removeComma(dataStatus.positif)) * 100).toFixed(2) }% 
+                          { ((this.removeComma(dataStatus.meninggal) / this.removeComma(dataStatus.positif)) * 100).toFixed(2) }%
                           <br/>Meninggal
                         </Button>
                       </div>
@@ -278,13 +278,13 @@ class Profile extends React.Component {
                     <TabPane tabId="plainTabs1">
                       { (loadingProvinsi)
                           ? <SpinnerDefault/>
-                          : <SimpleTable 
+                          : <SimpleTable
                               multiParam={this.provinsiMultiParam}
                               dataHeader={this.dataProvinsiHeader}
                               dataParam={this.dataProvinsiParam}
                               data={dataProvinsi}/>
                       }
-                      
+
                     </TabPane>
                     <TabPane tabId="plainTabs2">
                       <FormGroup>
@@ -306,7 +306,7 @@ class Profile extends React.Component {
                           ? <div className="text-center">
                               <SpinnerDefault/>
                             </div>
-                          : <SimpleTable 
+                          : <SimpleTable
                               multiParam={this.kabupatenMultiParam}
                               dataHeader={this.dataKabupatenHeader}
                               dataParam={this.dataKabupatenParam}
